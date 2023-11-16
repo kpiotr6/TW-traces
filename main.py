@@ -7,6 +7,8 @@ import sys
 
 type DirectedGraph = List[GraphNode]
 
+# Na podstawie grafu relacji pomiędzy symbolami tworzy
+# tablicę wypełnioną relacjami zależności oraz tablicę relacji niezależności
 def get_relations(symbols: List[str], relation_graph: Dict[str,List[str]]) -> Tuple[List[Tuple],List[Tuple]]:
   in_rel = []
   not_rel = []
@@ -20,6 +22,9 @@ def get_relations(symbols: List[str], relation_graph: Dict[str,List[str]]) -> Tu
   not_rel.sort()
   return in_rel, not_rel
 
+
+# Na podstawie grafu relacji pomiędzy symbolami oraz słowa z nich utworzonego tworzy
+# graf skierowany.
 def create_directed_graph(word: str, relation_graph: RelationGraph) -> DirectedGraph:
   directed = []
   for i,letter in enumerate(word):
@@ -31,6 +36,7 @@ def create_directed_graph(word: str, relation_graph: RelationGraph) -> DirectedG
     directed.append(node)
   return directed
 
+# Funkcja pomocnicza realizująca sam podstawowy algorytm DFS. Wypełnia dodatkowo listę w polu current_path każdego wierzchołka
 def sub_DFS(graph: DirectedGraph, node: GraphNode) -> List[GraphNode]:
   if node.visited:
     tmp = node.current_path.copy()
@@ -46,9 +52,10 @@ def sub_DFS(graph: DirectedGraph, node: GraphNode) -> List[GraphNode]:
   tmp.append(node)
   return tmp 
     
-
-
-
+# Funkcja realizująca przeszukanie grafu za pomocą DFSa, a następnie odrzucająca niepotrzebne krawędzie.
+# Każdy wierzchołek A przechowuje w polu current_path wszystkie wierzchołki do których można utworzyć ścieżkę
+# z wierzchołka A. Następnie dla każdego wierzchołka B, funkcja sprawdza czy wierzchołki których krawędzie prowadzą do 
+# B należą do current_path innych wierzchołków prowadzących do B
 def discarding_DFS(graph: DirectedGraph):
   for node in graph:
     sub_DFS(graph, node)
@@ -65,20 +72,8 @@ def discarding_DFS(graph: DirectedGraph):
           continue
         if node_check1 in node_check2.current_path and node.id in node_check2.edges:
           node_check2.edges.remove(node.id)
-
-def sub_BFS(graph: DirectedGraph,start: GraphNode):
-  q = queue.Queue()
-  q.put(start)
-  start.time = 0
-  while not q.empty():
-    current = q.get()
-    for verticle in current.edges:
-      node = graph[verticle]
-      node.visited = True
-      node.time = current.time+1
-      q.put(node)
         
-
+# Funkcja realizująca algorytm BFS, który odwiedza także już odwiedzone wierzchołki.
 def BFS(graph: DirectedGraph):
   for v in graph:
     if not v.visited:
@@ -92,7 +87,7 @@ def BFS(graph: DirectedGraph):
           node.visited = True
           node.time = current.time+1
           q.put(node)
-  
+# Funkcja zwracająca postać normalną Foaty na podstawie grafu skierowanego z czasem odwiedzin
 def to_FNF(graph: DirectedGraph) -> str:
   time = 0
   for v in graph:
@@ -105,6 +100,7 @@ def to_FNF(graph: DirectedGraph) -> str:
     result_string = f"{result_string}({"".join(packet)})"
   return result_string
 
+# Funkcja ułatwiająca zapis grafu w postaci dot, z użyciem biblioteki graphviz
 def to_Diagraph(graph: DirectedGraph, name: str):
   dot = graphviz.Digraph(name)
   for v in graph:
@@ -115,8 +111,8 @@ def to_Diagraph(graph: DirectedGraph, name: str):
   return dot
 
 if __name__ == "__main__":
-  if len(sys.argv) == 0:
-    name = "test.txt"
+  if len(sys.argv) == 1:
+    name = "test1.txt"
   else:
     name = sys.argv[1]
   symbols, word, relation_graph = read_file(name)

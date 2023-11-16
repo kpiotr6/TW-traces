@@ -4,9 +4,18 @@ from typing import Dict, Tuple,List
 
 type RelationGraph = Dict[str,List[str]]
 
-# A
-# W
-# rest
+# Czyta pliki zawierające dane w formacie:
+# znaki alfabetu oddzielone przecinkiem
+# analizowane słowo
+# produkcje, każda w osobnych liniach
+# Przykład:
+# a,b,c,d
+# baadcb
+# (a) x := x + y
+# (b) y := y + 2z
+# (c) x := 3x + z
+# (d) z := y − z
+
 def read_file(path: str) -> Tuple[List[str],List[str],RelationGraph]:
   if (not os.path.isfile(path)):
     raise ValueError("No such file.")
@@ -31,6 +40,10 @@ def read_file(path: str) -> Tuple[List[str],List[str],RelationGraph]:
   graph = create_relation_graph(all_expressions)
   return symbols, word, graph
 
+
+# Tworzy graf relacji pomiędzy symbolami.
+# Reprezentowany jest przez słownik, którego kluczami są symbole alfabetu,
+# a wartościami listy zawierające symbole które są w relacji z kluczami
 def create_relation_graph(expressions: [Tuple[str, str, str]]) -> RelationGraph:
   graph = dict()
   for exp in expressions:

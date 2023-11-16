@@ -1,5 +1,6 @@
 from typing import List
 
+# Klasa reprezentująca wierzchołek grafu, wraz z dodatkowymi polami
 class GraphNode:
 
   def __init__(self,id: int, symbol: str, edges: List[int]):
