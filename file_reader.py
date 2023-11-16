@@ -2,7 +2,7 @@ import os
 import re
 from typing import Dict, Tuple,List
 
-type RelationGraph = Dict[str,List[str]]
+RelationGraph = Dict[str,List[str]]
 
 # Czyta pliki zawierające dane w formacie:
 # znaki alfabetu oddzielone przecinkiem
@@ -15,7 +15,9 @@ type RelationGraph = Dict[str,List[str]]
 # (b) y := y + 2z
 # (c) x := 3x + z
 # (d) z := y − z
-
+# 
+# Zwraca krotkę składającą się z listy symboli, listy przedstawiającej słowo
+# oraz objekt type RelationGraph = Dict[str,List[str]]
 def read_file(path: str) -> Tuple[List[str],List[str],RelationGraph]:
   if (not os.path.isfile(path)):
     raise ValueError("No such file.")
