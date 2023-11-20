@@ -32,13 +32,13 @@ def to_FNF(graph: DirectedGraph) -> str:
     divided[v.time].append(v.symbol)
   result_string = ""
   for packet in divided:
-    result_string = f"{result_string}({"".join(packet)})"
+    result_string = f"{result_string}({''.join(packet)})"
   return result_string
 
 # Funkcja tworząca obiekt graphviz.Diagraph umożliwiający łatwe generowanie 
 # zapisu grafu w postaci dot.
 def to_Diagraph(graph: DirectedGraph, name: str) -> graphviz.Digraph:
-  dot = graphviz.Digraph(name)
+  dot = graphviz.Digraph(name,format="png")
   for v in graph:
     for new_v in v.edges:
       dot.edge(str(v.id),str(new_v))
